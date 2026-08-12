@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<h1>Import Preview</h1><p><strong>{{preview.filename}}</strong> — {{preview.candidates|length}} candidate work items detected.</p>
+<form method="post" action="{{url_for('main.import_commit')}}">
+<table><tr><th>Import</th><th>Candidate</th><th>Category</th><th>Priority</th><th>Confidence</th><th>Duplicate</th></tr>
+{% for c in preview.candidates %}<tr><td><input style="width:auto" type="checkbox" name="selected" value="{{loop.index0}}" {% if not c.duplicate_of %}checked{% endif %}></td>
+<td><strong>{{c.title}}</strong>{% if c.description %}<div class="muted">{{c.description[:240]}}</div>{% endif %}</td><td>{{c.category}}</td><td>{{c.priority}}</td><td>{{(c.confidence*100)|round|int}}%</td><td>{% if c.duplicate_of %}<span class="badge">Possible #{{c.duplicate_of}}</span>{% else %}—{% endif %}</td></tr>{% endfor %}
+</table><p><button>Import Selected</button> <a class="btn secondary" href="{{url_for('main.import_file')}}">Cancel</a></p></form>{% endblock %}

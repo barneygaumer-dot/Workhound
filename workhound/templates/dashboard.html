@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block content %}
+<h1>Operational Work Intelligence</h1><p class="muted">What work exists, what is moving, what is stuck, and what are we accomplishing?</p>
+<div class="grid">
+<div class="card"><div class="muted">TOTAL</div><div class="metric">{{data.total}}</div></div>
+<div class="card"><div class="muted">IN PROGRESS</div><div class="metric">{{data.counts.get('In Progress',0)}}</div></div>
+<div class="card"><div class="muted">BLOCKED</div><div class="metric">{{data.counts.get('Blocked',0)}}</div></div>
+<div class="card"><div class="muted">COMPLETED</div><div class="metric">{{data.completed}}</div></div>
+<div class="card"><div class="muted">COMPLETION RATE</div><div class="metric">{{data.completion_rate}}%</div></div>
+</div>
+<div class="two" style="margin-top:18px">
+<div class="card"><h2>Work by Status</h2>{% for k,v in data.counts.items() %}<p>{{k}} <strong style="float:right">{{v}}</strong></p>{% else %}<p class="muted">No work yet.</p>{% endfor %}</div>
+<div class="card"><h2>Work by Priority</h2>{% for k,v in data.priority.items() %}<p>{{k}} <strong style="float:right">{{v}}</strong></p>{% else %}<p class="muted">No work yet.</p>{% endfor %}</div>
+</div>
+<div class="card" style="margin-top:18px"><h2>Recent Work</h2>
+{% for i in recent %}<p><a href="{{url_for('main.work_detail',item_id=i.id)}}">{{i.title}}</a> <span class="badge">{{i.status}}</span></p>{% else %}<p class="muted">Import a file or create a work item to begin.</p>{% endfor %}
+</div>{% endblock %}

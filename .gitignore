@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+instance/*.db
+instance/*.sqlite*
+
+# Local/runtime data
+.venv/
+__pycache__/
+*.pyc
+instance/
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+UPGRADE_LAST.txt

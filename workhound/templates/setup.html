@@ -1,0 +1,63 @@
+{% extends "base.html" %}{% block title %}Setup — WorkHound{% endblock %}{% block content %}
+<h1>Administration</h1>
+<p class="muted">WorkHound v{{app_version}} · persistent instance: {{instance_path}}</p>
+
+<div class="two">
+  <div class="card">
+    <h2>Application Settings</h2>
+    <form method="post">
+      <input type="hidden" name="action" value="save_settings">
+      <label>Application Name</label>
+      <input name="app_name" value="{{settings.app_name}}">
+      <label>Default Owner</label>
+      <input name="default_owner" value="{{settings.default_owner}}" placeholder="Optional">
+      <label>Report Organization / Team</label>
+      <input name="report_org" value="{{settings.report_org}}" placeholder="NOC, Operations, etc.">
+      <label>Update Channel</label>
+      <select name="update_channel">
+        <option value="stable" {% if settings.update_channel=='stable' %}selected{% endif %}>Stable</option>
+        <option value="preview" {% if settings.update_channel=='preview' %}selected{% endif %}>Preview</option>
+      </select>
+      <p><button>Save Settings</button></p>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>System Status</h2>
+    <p><strong>Version:</strong> v{{app_version}}</p>
+    <p><strong>Database:</strong> SQLite local instance</p>
+    <p><strong>Import Engine:</strong> CSV / XLSX / Markdown</p>
+    <p><strong>Analytics:</strong> Local deterministic calculations</p>
+    <p><strong>External AI dependency:</strong> None</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>Update from Release ZIP</h2>
+  <p>Upload a complete WorkHound release ZIP. <code>instance/</code> and <code>.venv/</code> are preserved. The updater validates the package, creates a pre-update backup, overlays application files, and requires a process restart before the new release is active.</p>
+
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="stage_update">
+    <label>WorkHound Release ZIP</label>
+    <input type="file" name="release_zip" accept=".zip" required>
+    <p><button>Validate &amp; Stage Update</button></p>
+  </form>
+
+  {% if staged_update %}
+  <div class="card" style="margin-top:14px">
+    <strong>Restart Required</strong>
+    <pre style="white-space:pre-wrap">{{staged_update}}</pre>
+    <p class="muted">Stop the current WorkHound process and start it again with the normal launch command. The running Python process cannot safely reload application code in place.</p>
+  </div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>Recent Update Backups</h2>
+  {% for b in backups %}
+    <p><code>{{b.name}}</code> <span class="muted">— {{b.mtime.strftime('%Y-%m-%d %H:%M:%S')}} · {{(b.size / 1024 / 1024)|round(2)}} MB</span></p>
+  {% else %}
+    <p class="muted">No update backups yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

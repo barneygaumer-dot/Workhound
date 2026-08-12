@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<h1>Work Queue</h1><p><a class="btn" href="{{url_for('main.work_new')}}">New Work Item</a></p>
+<table><tr><th>ID</th><th>Work</th><th>Category</th><th>Priority</th><th>Status</th><th>Owner</th><th>Progress</th></tr>
+{% for i in items %}<tr><td>{{i.id}}</td><td><a href="{{url_for('main.work_detail',item_id=i.id)}}">{{i.title}}</a></td><td>{{i.category or ''}}</td><td>{{i.priority}}</td><td>{{i.status}}</td><td>{{i.owner or ''}}</td><td>{{i.progress_percent}}%<div class="bar"><span style="width:{{i.progress_percent}}%"></span></div></td></tr>
+{% else %}<tr><td colspan="7" class="muted">No work items.</td></tr>{% endfor %}</table>{% endblock %}

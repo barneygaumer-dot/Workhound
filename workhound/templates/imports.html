@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block content %}
+<h1>Import Batches</h1><table><tr><th>ID</th><th>File</th><th>Type</th><th>Imported</th><th>Detected</th><th>Accepted</th><th>Rejected</th><th>Duplicates</th></tr>
+{% for b in batches %}<tr><td>{{b.id}}</td><td>{{b.filename}}</td><td>{{b.source_type}}</td><td>{{b.imported_at.strftime('%Y-%m-%d %H:%M')}}</td><td>{{b.detected}}</td><td>{{b.accepted}}</td><td>{{b.rejected}}</td><td>{{b.duplicates}}</td></tr>{% else %}<tr><td colspan="8">No imports.</td></tr>{% endfor %}</table>{% endblock %}

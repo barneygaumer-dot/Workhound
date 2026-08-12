@@ -1,0 +1,114 @@
+{% extends "base.html" %}{% block content %}
+<h1>{{'Edit Work Item' if item else 'New Work Item'}}</h1>
+
+<form method="post">
+<label>Title</label><input name="title" required value="{{item.title if item else ''}}">
+<label>Description</label><textarea name="description" rows="5">{{item.description if item else ''}}</textarea>
+
+<div class="two">
+  <div><label>Category</label><input name="category" value="{{item.category if item else ''}}"></div>
+  <div><label>Owner</label><input name="owner" value="{{item.owner if item else ''}}"></div>
+</div>
+
+<div class="two">
+  <div>
+    <label>Work Type</label>
+    <select name="work_type">
+      {% for x in ['TASK','PROJECT','VALIDATION','INVESTIGATION','IMPROVEMENT','LEARNING','DOCUMENTATION','OPERATIONAL','FOLLOW_UP','RECOMMENDATION'] %}
+      <option {% if item and item.work_type==x %}selected{% endif %}>{{x}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Priority</label>
+    <select name="priority">
+      {% for x in ['Low','Medium','High','Critical'] %}
+      <option {% if item and item.priority==x %}selected{% endif %}>{{x}}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<div class="two">
+  <div>
+    <label>Status</label>
+    <select name="status">
+      {% for x in ['New','Planned','In Progress','Blocked','Waiting','Completed','Deferred','Cancelled'] %}
+      <option {% if item and item.status==x %}selected{% endif %}>{{x}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Progress %</label>
+    <input type="number" min="0" max="100" name="progress_percent" value="{{item.progress_percent if item else 0}}">
+  </div>
+</div>
+
+{% if item %}
+<label>Ticket</label><input name="ticket" value="{{item.ticket or ''}}">
+{% endif %}
+
+<p><button>Save Work Item Details</button></p>
+</form>
+
+{% if item %}
+<div class="card" style="margin-top:18px">
+  <h2>Add Work Note</h2>
+  <p class="muted">Creates a permanent timestamped artifact. Owner defaults to the Work Item owner and can be overridden.</p>
+
+  <form method="post" action="{{url_for('main.add_work_note', item_id=item.id)}}">
+    <label>Artifact Owner</label>
+    <input name="note_owner" value="{{item.owner or ''}}" placeholder="Defaults to Work Item owner">
+
+    <label>Artifact Note</label>
+    <textarea name="note_text" rows="5" placeholder="Add progress, evidence, decision, blocker, follow-up, or management context..."></textarea>
+
+    <p><button>Save Note Artifact</button></p>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px">
+  <h2>Work Note Artifacts</h2>
+
+  {% for note in item.note_artifacts %}
+    <div style="padding:14px 0;{% if not loop.last or item.notes %}border-bottom:1px solid var(--line);{% endif %}">
+      <div>
+        <strong>{{note.owner or 'Unassigned'}}</strong>
+        <span class="badge">Artifact #{{note.id}}</span>
+        <span class="muted" style="float:right">{{note.created_at.strftime('%Y-%m-%d %H:%M:%S')}} UTC</span>
+      </div>
+      <div style="white-space:pre-wrap;margin-top:8px">{{note.body}}</div>
+    </div>
+  {% endfor %}
+
+  {% if item.notes %}
+    <div style="padding:14px 0">
+      <div>
+        <strong>{{item.owner or 'Unassigned'}}</strong>
+        <span class="badge">Legacy Note</span>
+      </div>
+      <div style="white-space:pre-wrap;margin-top:8px">{{item.notes}}</div>
+    </div>
+  {% endif %}
+
+  {% if not item.note_artifacts and not item.notes %}
+    <p class="muted">No work-note artifacts yet.</p>
+  {% endif %}
+</div>
+
+{% if item.source %}
+<div class="card" style="margin-top:16px">
+  <h2>Source Evidence</h2>
+  <p><strong>{{item.source}}</strong><br><span class="muted">{{item.source_section}}</span></p>
+  <pre style="white-space:pre-wrap">{{item.source_text}}</pre>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px">
+  <h2>History</h2>
+  {% for h in item.history|sort(attribute='timestamp', reverse=true) %}
+    <p>{{h.timestamp.strftime('%Y-%m-%d %H:%M:%S')}} UTC — <strong>{{h.event}}</strong> {{h.detail or ''}}</p>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

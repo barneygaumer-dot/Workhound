@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}WorkHound{% endblock %}</title>
+<style>
+:root{--bg:#0b0f14;--panel:#121922;--line:#263241;--text:#e8eef5;--muted:#91a0b3;--accent:#58a6ff;--good:#3fb950;--warn:#d29922;--bad:#f85149}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+nav{display:flex;gap:18px;align-items:center;padding:14px 24px;background:#0f151d;border-bottom:1px solid var(--line)}
+nav strong{font-size:19px}nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--text)}
+main{max-width:1200px;margin:0 auto;padding:26px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}.metric{font-size:34px;font-weight:700}
+.muted{color:var(--muted)}table{width:100%;border-collapse:collapse;background:var(--panel)}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line)}
+a{color:var(--accent)}.btn,button{display:inline-block;background:var(--accent);color:#06111e;border:0;border-radius:7px;padding:9px 13px;font-weight:700;text-decoration:none;cursor:pointer}
+.btn.secondary{background:#263241;color:var(--text)}input,select,textarea{width:100%;background:#0d131b;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:9px}
+label{display:block;margin:12px 0 5px}.flash{padding:10px;border:1px solid var(--line);background:var(--panel);margin-bottom:14px}.bar{height:8px;background:#27313d;border-radius:5px;overflow:hidden}.bar span{display:block;height:100%;background:var(--accent)}
+.badge{padding:3px 7px;border:1px solid var(--line);border-radius:12px;font-size:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.two{grid-template-columns:1fr}nav{flex-wrap:wrap}}
+</style>
+</head><body>
+<nav><strong>🐺 WorkHound</strong><a href="{{url_for('main.dashboard')}}">Dashboard</a><a href="{{url_for('main.work')}}">Work</a><a href="{{url_for('main.analytics')}}">Analytics</a><a href="{{url_for('main.import_file')}}">Import</a><a href="{{url_for('main.imports')}}">Batches</a><a href="{{url_for('main.reports')}}">Reports</a><a href="{{url_for('main.setup')}}">Setup</a><span class="muted" style="margin-left:auto">v{{app_version}}</span></nav>
+<main>
+{% with msgs=get_flashed_messages(with_categories=true) %}{% for cat,msg in msgs %}<div class="flash">{{msg}}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+</main></body></html>

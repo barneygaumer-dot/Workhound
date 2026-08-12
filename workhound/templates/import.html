@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block content %}
+<h1>Import Work</h1><div class="card"><p>Upload CSV, XLSX, or Markdown. WorkHound parses into candidates first; nothing is committed until preview approval.</p>
+<form method="post" enctype="multipart/form-data"><input type="file" name="file" accept=".csv,.xlsx,.md,.markdown" required><p><button>Analyze Import</button></p></form></div>{% endblock %}
